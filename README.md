@@ -42,14 +42,14 @@ EthernetServer server(80);
   Accept: text/html, application/xhtml+xml,....
 ```
 
-  So, we parse 5th~7th data to control RGB LED on GR-KURUMI.  
+  So, 5th~7th data are parsed to control RGB LEDs.  
 ```c 
   //5th~7th data of HTTP GET Message is parsed as parse_arr  
   parse_arr[0] = '/'  
   parse_arr[1] = 'G'  
   parse_arr[2] = '0'  
 ```
- * Contorl RGB LED as data pased from HTTP GET Message  
+ * Contorl RGB LEDs as data pased from HTTP GET Message  
 ```c 
  if(parse_arr[0] == '/'){  
    switch(parse_arr[1]){  
