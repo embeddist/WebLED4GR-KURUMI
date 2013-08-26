@@ -24,48 +24,56 @@ After opening a web-browser and navigating to the Ethernet shield’s IP address
 ## Code
  
  * Configuration of IP address  
-`
+```c
 IPAddress ip(192,168,1,177);
-`
+```
 
  * Initalize the Port (port80 is default for HTTP)  
-`
+```c
 EthernetServer server(80);
-`
+```
 
  * Parsing of HTTP GET Message  
 
   When web-page address is http://192.168.1.177/G0 to on the Green LEN,
   the received HTTP GET Message is as below,  
-`
- GET /G0 HTTP/1.1  
- Accept: text/html, application/xhtml+xml,....
-`
+```c
+  GET /G0 HTTP/1.1  
+  Accept: text/html, application/xhtml+xml,....
+```
 
   So, we parse 5th~7th data to control RGB LED on GR-KURUMI.  
-`
-//5th~7th data of HTTP GET Message is parsed as parse_arr  
-parse_arr[0] = '/'  
-parse_arr[1] = 'G'  
-parse_arr[2] = '0'  
-`
-
+```c 
+  //5th~7th data of HTTP GET Message is parsed as parse_arr  
+  parse_arr[0] = '/'  
+  parse_arr[1] = 'G'  
+  parse_arr[2] = '0'  
+```
  * Contorl RGB LED as data pased from HTTP GET Message  
+```c 
+ if(parse_arr[0] == '/'){  
+   switch(parse_arr[1]){  
+   case('R') :  
+   // http://192.168.1.177:R0 => Red LED OFF			  	  
+   if(parse_arr[2] == '0'){    
+	   digitalWrite(led_red, HIGH);  
+   // http://192.168.1.177:R1 => Red LED ON    			  
+   }else if(parse_arr[2] == '1'){  
+           digitalWrite(led_red, LOW);  
+   }  
+           break;  
+  ... 
+```  
 
-`
-if(parse_arr[0] == '/'){  
-  switch(parse_arr[1]){  
-  case('R') :  
-  // http://192.168.1.177:R0 => Red LED OFF			  	  
-  if(parse_arr[2] == '0'){   
-	  digitalWrite(led_red, HIGH);  
-  // http://192.168.1.177:R1 => Red LED ON    			  
-  }else if(parse_arr[2] == '1'){  
-	  digitalWrite(led_red, LOW);  
-  }  
-  	  break;  
-... 
-`
-
+ * Send a standard http response  
+  Check current LED status as digitalRead() and Send http respoonse inclued the LED status.  
+```c 
+          int sensorReading = digitalRead(led_red);
+          client.print("digitalRead(LED_RED)");//client.print(led_red);
+          client.print(" is ");
+          client.print(sensorReading);
+          client.println("<br />");
+  ... 
+```
 
 </markdown>
